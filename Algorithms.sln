@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30711.63
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LRUCache", "LRUCache\LRUCache.csproj", "{0D46DA50-0FF6-4FA2-8A11-E8E906FBE1E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LRUCache", "LRUCache\LRUCache.csproj", "{0D46DA50-0FF6-4FA2-8A11-E8E906FBE1E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arrays", "Arrays", "{6921432E-A9E7-4EF0-A5D4-7B3CAAC23A2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwoSums", "Arrays\TwoSums\TwoSums.csproj", "{AA70CAA1-02E9-4FF8-96A5-EC937D7F3256}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{0D46DA50-0FF6-4FA2-8A11-E8E906FBE1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D46DA50-0FF6-4FA2-8A11-E8E906FBE1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D46DA50-0FF6-4FA2-8A11-E8E906FBE1E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA70CAA1-02E9-4FF8-96A5-EC937D7F3256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA70CAA1-02E9-4FF8-96A5-EC937D7F3256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA70CAA1-02E9-4FF8-96A5-EC937D7F3256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA70CAA1-02E9-4FF8-96A5-EC937D7F3256}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AA70CAA1-02E9-4FF8-96A5-EC937D7F3256} = {6921432E-A9E7-4EF0-A5D4-7B3CAAC23A2B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66374904-B491-4905-B771-687F1FDDE693}
