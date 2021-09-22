@@ -6,10 +6,19 @@ namespace LRUCache
 {
     class Program
     {
+
+        /*
+         * LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+        int get(int key) Return the value of the key if the key exists, otherwise return -1.
+        void put(int key, int value) Update the value of the key if the key exists. Otherwise,
+        add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+        The functions get and put must each run in O(1) average time complexity.
+
+         * **/
         public class LRUCache
         {
             //Set the constrains first
-            const short CAPACITY_MAX = 3000;
+            const short CAPACITY_MAX = 3000;    
 
             /// <summary>
             /// Represents the capacity of this cache
@@ -21,7 +30,7 @@ namespace LRUCache
             /// </summary>
             private Dictionary<int, LinkedListNode<KeyValuePair<int, int>>> _dict;
             /// <summary>
-            /// Represents a double linked list
+            /// Represents a double linked list that contains the key, and the reference to the linked node
             /// </summary>
             private LinkedList<KeyValuePair<int, int>> _linkedList;
 
@@ -44,7 +53,7 @@ namespace LRUCache
             }
 
             public int Get(int key)
-            {
+            {              
 
                 if (_dict.ContainsKey(key))
                 {
@@ -55,13 +64,14 @@ namespace LRUCache
                     {
                         var value = node.Value.Value;
                         _linkedList.Remove(node);
-                        _linkedList.AddFirst(node);
+                        _linkedList.AddFirst(node);                    
 
                         return value;
                     }
                 }
 
                 //by default return -1, if node is not found
+                //set last key used as -1                
                 return -1;
 
             }
@@ -69,24 +79,33 @@ namespace LRUCache
             public void Put(int key, int value)
             {
                 //Check if the linked-list is over capacity
-                if (_linkedList.Count == _capacity)
+                if (!_dict.ContainsKey(key))
                 {
-                    //get the last index and pop last item from list
-                    var lastKey = _linkedList.Last.Value.Key;
-                    _linkedList.RemoveLast();
-                    //remove the popped key from dictionary
-                    _dict.Remove(lastKey);
+                    if (_linkedList.Count == _capacity)
+                    {
 
-                    //then add the new value to the front
-                    LinkedListNode<KeyValuePair<int, int>> node = CreateNode(key, value);
-                    _dict.Add(key, node);
+                        //get the last index used and remove it from the linked list
+                        var lastUsedKey = _linkedList.Last.Value.Key;
+                        //remove last used node from linked list based on key
+                        _linkedList.RemoveLast();
+                        //remove the last used key from dictionary
+                        _dict.Remove(lastUsedKey);                     
+
+                        //then add the new value to the front
+                        LinkedListNode<KeyValuePair<int, int>> node = CreateNode(key, value);
+                        _dict.Add(key, node);
+                    }
+                    else
+                    {
+                        //then add the new value to the front
+                        LinkedListNode<KeyValuePair<int, int>> node = CreateNode(key, value);
+                        _dict.Add(key, node);
+                    }
                 }
                 else
                 {
-                    //if the capacity is not reached, then add the value to the front 
-                    LinkedListNode<KeyValuePair<int, int>> node = CreateNode(key, value);
-                    _dict.Add(key, node);
-                }
+                    UpdateNode(key, value);
+                }            
 
             }
 
@@ -100,8 +119,21 @@ namespace LRUCache
             {
                 KeyValuePair<int, int> kvp = new KeyValuePair<int, int>(key, value);
                 var node = new LinkedListNode<KeyValuePair<int, int>>(kvp);
-                _linkedList.AddFirst(node);
+                _linkedList.AddFirst(node);     
                 return node;
+            }
+
+            /// <summary>
+            /// Updates an exisiting node, leaving the key, and updating the value.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="value"></param>
+            private void UpdateNode(int key, int value)
+            {
+                var node = _dict[key];
+                node.Value = new KeyValuePair<int, int>(key, value);                
+                _linkedList.Remove(node);
+                _linkedList.AddFirst(node);              
             }
         }
        
@@ -115,18 +147,17 @@ namespace LRUCache
         public static void Main(string[] args)
         {
             try
-            {              
-
+            {
                 LRUCache lRUCache = new LRUCache(2);
-                lRUCache.Put(1, 0); // cache is {1=1}
-                lRUCache.Put(2, 2); // cache is {1=1, 2=2}                                
-                Assert.AreEqual(1, lRUCache.Get(1), "expected 1"); // return 1
-                lRUCache.Put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}
-                Assert.AreEqual(-1, lRUCache.Get(2), "expected -1");    // returns -1 (not found)
-                lRUCache.Put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}
-                Assert.AreEqual(-1, lRUCache.Get(1),  "expected -1");   // return -1 (not found)
-                Assert.AreEqual(3, lRUCache.Get(3), "expected 3");    // return 3
-                Assert.AreEqual(4, lRUCache.Get(4), "expected 4");   // return 4
+                Assert.AreEqual(-1, lRUCache.Get(2));
+                lRUCache.Put(2, 6);
+                Assert.AreEqual(-1, lRUCache.Get(1));
+                lRUCache.Put(1, 5);
+                lRUCache.Put(1, 2);
+                Assert.AreEqual(2, lRUCache.Get(1));
+                Assert.AreEqual(6, lRUCache.Get(2));
+
+                Console.WriteLine("¡All test passed!");
             }
             catch(InvalidOperationException inv)
             {
