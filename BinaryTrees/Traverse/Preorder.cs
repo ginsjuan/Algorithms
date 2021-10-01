@@ -18,23 +18,18 @@ namespace BinaryTrees.Traverse
                 return new List<int>();
 
             //Check if is a root node
-            if(root.left == null && root.right == null)
-            {
-                values.Add(root.val);
-                return values; 
-            }
+            values.Add(root.val);        
 
+          
             //Check the left node, then the rigth node
             if(root.left != null)
-            {
-                values.Add(root.val);
+            {             
                 values.AddRange(PreorderTraversal(root.left));
             }
            
 
             if(root.right != null)
-            {
-                values.Add(root.val);
+            {                
                 values.AddRange(PreorderTraversal(root.right));
             }
 

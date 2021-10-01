@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BinaryTrees
+﻿namespace BinaryTrees
 {
     public class TreeNode
     {
@@ -32,12 +26,28 @@ namespace BinaryTrees
 
             var mapTree = tree.Split(',').ToList();
 
-            Queue<(string, int)> queue = new Queue<(string, int)>();
+            Queue<(string, int, int)> queue = new Queue<(string, int, int)>();
+
+            int level = 0;
+            short count = 0;
 
             for (int i = 0; i < mapTree.Count; i++)
             {
-                var node = (node: mapTree[i], index: i);
+                var node = (node: mapTree[i], index: i, level: level);
                 queue.Enqueue(node);
+
+
+                if (count == 0)
+                    level++;
+
+                if (count >= 2)
+                {
+                    level++;
+                    count = 0;
+                }
+
+                count++;
+
             }
 
             if (queue.Count >= 1)
@@ -50,7 +60,7 @@ namespace BinaryTrees
                 if (refVal > -1)
                 {
                     root.val = refVal;
-                    root = CreateNode(root, queue);
+                    root = CreateNode(root, queue, 1);
                 }
 
             }
@@ -64,42 +74,54 @@ namespace BinaryTrees
         /// <param name="root">The root node</param>
         /// <param name="childs">The childs that are going to be added, left or rigth</param>
         /// <returns>A node with its children added</returns>
-        private static TreeNode CreateNode(TreeNode root, Queue<(string, int)> childs)
+        private static TreeNode CreateNode(TreeNode root, Queue<(string, int, int)> childs, int currentLevel)
         {
             if (childs.Count == 0)
                 return root;
 
-            var node = childs.Dequeue();
+            (string, int, int) rNode = ("", -1, -1);
+            (string, int, int) lNode = ("", -1, -1);
 
-            int? val = -1;
+            //Deque rigth node
+            if (childs.Count > 0)
+                rNode = childs.Dequeue();
 
+            //Deque left node
+            if (childs.Count > 0)
+                lNode = childs.Dequeue();
+
+
+            //Add rigth node, and all its childs
+            if (rNode.Item2 % 2 != 0 && rNode.Item3 == currentLevel)
+            {
+
+                int? nodeVal = GetValue(rNode);
+                if (nodeVal.HasValue)
+                    root.right = CreateNode(new TreeNode(nodeVal.Value), childs, ++rNode.Item3);
+            }
+
+            //Add left node, and all its childs
+            if (lNode.Item2 % 2 == 0 && lNode.Item3 == currentLevel)
+            {
+
+                int? nodeVal = GetValue(lNode);
+                if (nodeVal.HasValue)
+                    root.left = CreateNode(new TreeNode(nodeVal.Value), childs, ++lNode.Item3);
+            }
+
+            return root;
+
+        }
+
+        private static int? GetValue((string, int, int) node)
+        {
+            int? val;
             if (node.Item1 == "null")
                 val = null;
             else
                 val = int.Parse(node.Item1);
 
-            var i = node.Item2;
-
-            //Add left node
-            if (i % 2 != 0) //If not is pair then is a left node
-            {
-                if (val.HasValue)
-                    root.left = CreateNode(new TreeNode(val.Value), childs);
-            }
-
-            //Add rigth node
-            if (i % 2 == 0)   //If is pair then is a right node
-            {
-                if (val.HasValue)
-                    root.right = CreateNode(new TreeNode(val.Value), childs);
-            }
-
-            //If stills nodes deque in root
-            if (childs.Count >= 1)
-                root = CreateNode(root, childs);
-
-            return root;
-
+            return val;
         }
     }
 }
